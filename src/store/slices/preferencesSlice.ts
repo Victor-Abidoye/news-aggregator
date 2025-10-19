@@ -12,7 +12,10 @@ const loadInitialState = (): PreferencesState => {
   try {
     const raw = localStorage.getItem("preferences");
     if (raw) return JSON.parse(raw) as PreferencesState;
-  } catch {}
+  } catch (e) {
+    // ignore localStorage parse errors
+    console.debug("Failed to load preferences:", String(e));
+  }
   return {
     preferredSources: ["newsapi", "guardian", "nytimes"],
     preferredCategories: [],

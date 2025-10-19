@@ -41,7 +41,8 @@ export async function fetchArticles(params: QueryParams): Promise<Article[]> {
           });
           const articles = (data.articles ?? []).map(normalizeFromNewsApi);
           return filterByCategories(articles, categories);
-        } catch (_) {
+        } catch {
+          // ignore individual source failures
           return [];
         }
       })()
@@ -61,7 +62,8 @@ export async function fetchArticles(params: QueryParams): Promise<Article[]> {
           const results = data.response?.results ?? [];
           const articles = results.map(normalizeFromGuardian);
           return filterByCategories(articles, categories);
-        } catch (_) {
+        } catch {
+          // ignore individual source failures
           return [];
         }
       })()
@@ -87,7 +89,8 @@ export async function fetchArticles(params: QueryParams): Promise<Article[]> {
           const docs = data.response?.docs ?? data.results ?? [];
           const articles = docs.map(normalizeFromNYT);
           return filterByCategories(articles, categories);
-        } catch (_) {
+        } catch {
+          // ignore individual source failures
           return [];
         }
       })()

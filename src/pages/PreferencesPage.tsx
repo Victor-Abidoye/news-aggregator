@@ -1,36 +1,47 @@
-import { useState } from "react"
-import { useAppDispatch, useAppSelector } from "../hooks/useRedux"
-import { setPreferredAuthors, setPreferredCategories, setPreferredSources } from "../store/slices/preferencesSlice"
-import { Settings, Save, User, Tag, Newspaper, ArrowLeft } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
+import {
+  setPreferredAuthors,
+  setPreferredCategories,
+  setPreferredSources,
+} from "../store/slices/preferencesSlice";
+import { Settings, Save, User, Tag, Newspaper, ArrowLeft } from "lucide-react";
+import type { ArticleSource } from "../store/slices/articlesSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PreferencesPage() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const prefs = useAppSelector((s) => s.preferences)
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const prefs = useAppSelector((s) => s.preferences);
 
-  const [sources, setSources] = useState(prefs.preferredSources.join(", "))
-  const [categories, setCategories] = useState(prefs.preferredCategories.join(", "))
-  const [authors, setAuthors] = useState(prefs.preferredAuthors.join(", "))
+  const [sources, setSources] = useState(prefs.preferredSources.join(", "));
+  const [categories, setCategories] = useState(
+    prefs.preferredCategories.join(", ")
+  );
+  const [authors, setAuthors] = useState(prefs.preferredAuthors.join(", "));
+
+  const VALID_SOURCES = ["newsapi", "guardian", "nytimes"];
 
   const save = () => {
     const s = sources
       .split(",")
       .map((x) => x.trim())
-      .filter(Boolean) as any
+      .filter(Boolean)
+      .map((x) => x.toLowerCase())
+      .filter((x) => VALID_SOURCES.includes(x)) as ArticleSource[];
     const c = categories
       .split(",")
       .map((x) => x.trim())
-      .filter(Boolean)
+      .filter(Boolean);
     const a = authors
       .split(",")
       .map((x) => x.trim())
-      .filter(Boolean)
-    dispatch(setPreferredSources(s))
-    dispatch(setPreferredCategories(c))
-    dispatch(setPreferredAuthors(a))
-    navigate("/")
-  }
+      .filter(Boolean);
+    dispatch(setPreferredSources(s));
+    dispatch(setPreferredCategories(c));
+    dispatch(setPreferredAuthors(a));
+    navigate("/");
+  };
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -46,7 +57,9 @@ export default function PreferencesPage() {
         <div className="flex items-center gap-3 mb-8">
           <Settings className="w-8 h-8 text-foreground" />
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Your Preferences</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Your Preferences
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">
               Customize your news feed to see content that matters to you
             </p>
@@ -66,7 +79,9 @@ export default function PreferencesPage() {
               onChange={(e) => setSources(e.target.value)}
               className="w-full px-4 py-3 bg-background border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             />
-            <p className="text-xs text-muted-foreground mt-2">Comma-separated list of sources</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Comma-separated list of sources
+            </p>
           </div>
 
           <div>
@@ -81,7 +96,9 @@ export default function PreferencesPage() {
               onChange={(e) => setCategories(e.target.value)}
               className="w-full px-4 py-3 bg-background border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             />
-            <p className="text-xs text-muted-foreground mt-2">Comma-separated list of categories</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Comma-separated list of categories
+            </p>
           </div>
 
           <div>
@@ -96,7 +113,9 @@ export default function PreferencesPage() {
               onChange={(e) => setAuthors(e.target.value)}
               className="w-full px-4 py-3 bg-background border border-input rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
             />
-            <p className="text-xs text-muted-foreground mt-2">Comma-separated list of author names</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Comma-separated list of author names
+            </p>
           </div>
 
           <div className="flex gap-3 pt-4">
@@ -117,5 +136,5 @@ export default function PreferencesPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

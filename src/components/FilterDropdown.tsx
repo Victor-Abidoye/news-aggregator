@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { updateFilters } from "../store/slices/articlesSlice";
+import type { ArticleSource } from "../store/slices/articlesSlice";
 import { fetchArticlesThunk } from "../store/thunks/fetchArticlesThunk";
 import { Filter, Calendar, Tag, Newspaper, X } from "lucide-react";
 import {
@@ -20,7 +21,7 @@ const CATEGORIES = [
   "world",
 ];
 
-const SOURCES = [
+const SOURCES: { id: ArticleSource; label: string }[] = [
   { id: "newsapi", label: "NewsAPI" },
   { id: "guardian", label: "The Guardian" },
   { id: "nytimes", label: "NY Times" },
@@ -41,11 +42,11 @@ export default function FilterDropdown() {
     dispatch(fetchArticlesThunk());
   };
 
-  const toggleSource = (sourceId: string) => {
+  const toggleSource = (sourceId: ArticleSource) => {
     const current = filters.sources;
-    const updated = current.includes(sourceId as any)
+    const updated = current.includes(sourceId)
       ? current.filter((s) => s !== sourceId)
-      : [...current, sourceId as any];
+      : [...current, sourceId];
     dispatch(updateFilters({ sources: updated }));
     dispatch(fetchArticlesThunk());
   };
@@ -62,7 +63,7 @@ export default function FilterDropdown() {
 
   const removeFilter = (
     type: "dateFrom" | "dateTo" | "category" | "source",
-    value?: string
+    value?: ArticleSource | string
   ) => {
     if (type === "dateFrom") {
       setDateFrom("");
@@ -74,7 +75,8 @@ export default function FilterDropdown() {
       toggleCategory(value);
       return;
     } else if (type === "source" && value) {
-      toggleSource(value);
+      // narrow to ArticleSource
+      toggleSource(value as ArticleSource);
       return;
     }
     dispatch(fetchArticlesThunk());
@@ -88,7 +90,7 @@ export default function FilterDropdown() {
 
   return (
     <div className="relative flex gap-2 items-center">
-      <DropdownMenu >
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-1.5 px-4 py-2.5 bg-background border border-input rounded-xl hover:bg-accent transition-colors font-medium text-foreground shadow-sm text-sm order-2">
             <Filter className="w-4 h-4" />
@@ -174,7 +176,7 @@ export default function FilterDropdown() {
                   key={source.id}
                   onClick={() => toggleSource(source.id)}
                   className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                    filters.sources.includes(source.id as any)
+                    filters.sources.includes(source.id)
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}

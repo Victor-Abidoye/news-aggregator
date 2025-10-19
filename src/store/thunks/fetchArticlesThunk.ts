@@ -22,8 +22,12 @@ export const fetchArticlesThunk = createAsyncThunk<
 
     dispatch(setArticles(articles));
     dispatch(setError(undefined));
-  } catch (e: any) {
-    dispatch(setError(e?.message ?? "Failed to fetch articles"));
+  } catch (e: unknown) {
+    const maybeMessage =
+      e && typeof e === "object" && "message" in (e as Record<string, unknown>)
+        ? String((e as Record<string, unknown>).message)
+        : String(e);
+    dispatch(setError(maybeMessage));
   } finally {
     dispatch(setLoading(false));
   }
