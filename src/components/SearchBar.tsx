@@ -11,6 +11,7 @@ export default function SearchBar() {
   const [keyword, setKeyword] = useState(filters.keyword);
 
   const onSearch = () => {
+    if(!keyword.trim()) return;
     dispatch(updateFilters({ keyword }));
     dispatch(fetchArticlesThunk());
   };
