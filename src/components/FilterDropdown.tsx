@@ -88,9 +88,9 @@ export default function FilterDropdown() {
 
   return (
     <div className="relative flex gap-2 items-center">
-      <DropdownMenu>
+      <DropdownMenu >
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-1.5 px-4 py-2.5 bg-background border border-input rounded-xl hover:bg-accent transition-colors font-medium text-foreground shadow-sm text-sm">
+          <button className="flex items-center gap-1.5 px-4 py-2.5 bg-background border border-input rounded-xl hover:bg-accent transition-colors font-medium text-foreground shadow-sm text-sm order-2">
             <Filter className="w-4 h-4" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
@@ -189,7 +189,7 @@ export default function FilterDropdown() {
 
       {/* Active Filter Pills - shown on md+ */}
       {activeFilterCount > 0 && (
-        <div className="hidden md:flex gap-2 items-center">
+        <div className="hidden md:flex gap-2 items-center order-1">
           {filters.dateFrom && (
             <div className="flex items-center gap-1 px-2.5 py-1.5 bg-primary/10 text-primary rounded-full text-[11px] font-medium">
               <span>From: {filters.dateFrom}</span>
