@@ -1,73 +1,117 @@
-# React + TypeScript + Vite
+## Inno News ( Casy Study Project ) - News Aggregator App using React, TypeScript, Tailwind CSS, Redux, Redux-toolkit, Public News API
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Live Demo: [](https://news-aggeregator.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Core P0 Features
 
-## React Compiler
+- ✅ [Home Page - News Feed]
+- ✅ [Filters - Data Source , Category, Date range]
+- ✅ [Scroll To Top]
+- ✅ [Infinte Scroll]
+- ✅ [Responsive Design (Both Desktop and Mobile Responsive)]
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+### Inno News is a modern **News Aggregator App** built using:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend - React, Typescript, Tailwind CSS**
+- **Redux** (State Management)
+- **Public News APIs Sources** (NewsAPI, The Guardian, NYTimes)
+- **Development & Deployment:** Vite, Docker, Netlify
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 💻 Local Development Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1️⃣ Prerequisites
+
+Make sure you have the following installed:
+
+- [[Node.js](https://nodejs.org/)](https://nodejs.org/) (v18 or later)
+- [[npm](https://www.npmjs.com/)](https://www.npmjs.com/) or [[pnpm](https://pnpm.io/)](https://pnpm.io/)
+- [[Git](https://git-scm.com/)](https://git-scm.com/)
+
+### 2️⃣ Clone the Repository
+
+```sh
+git clone https://github.com/Victor-Abidoye/news-aggregator.git
+cd news-aggregator
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3️⃣ Install Dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
+# OR
+pnpm install
 ```
+
+### 4️⃣ Set Up Environment Variables
+
+Create a `.env.local` file in the root directory and add your API keys:
+
+```sh
+VITE_NEWSAPI_KEY=your_news_api_key
+VITE_GUARDIAN_KEY=your_guardian_api_key
+VITE_NYT_KEY=your_nytimes_api_key
+```
+
+### 5️⃣ Start the Development Server
+
+```sh
+npm run dev
+```
+
+The app will be available at **http://localhost:5173/**
+
+---
+
+## 🐳 Running with Docker
+
+### 📌 Prerequisites
+
+- **Docker** (>= 20.x)
+- **Docker Compose** (>= 2.x)
+
+### 🚀 Steps
+
+#### 🔹 Run with Docker CLI
+
+```sh
+# 1️⃣ Build the Docker image
+docker build -t news-aggregator .
+
+# 2️⃣ Run the container
+docker run -p 5173:5173 news-aggregator
+```
+
+_App will be available at **http://localhost:5173/**._
+
+#### 🔹 Run with Docker Compose
+
+```sh
+# 1️⃣ Start the application
+docker-compose up --build
+```
+
+_App will be available at **http://localhost:5173/**._
+
+#### 🔹 Stop the container
+
+```sh
+docker-compose down
+```
+
+---
+
+## 🛠️ Environment Variables
+
+To use APIs, create a `.env` file in the root directory and add:
+
+```env
+VITE_NEWSAPI_KEY=your_news_api_key
+VITE_GUARDIAN_KEY=your_guardian_api_key
+VITE_NYT_KEY=your_nytimes_api_key
+```
+
+---
