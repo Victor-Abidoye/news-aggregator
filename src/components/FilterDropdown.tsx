@@ -1,10 +1,13 @@
-"use client";
-
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { updateFilters } from "../store/slices/articlesSlice";
 import { fetchArticlesThunk } from "../store/thunks/fetchArticlesThunk";
-import { Filter, Calendar, Tag, Newspaper, X, ChevronDown } from "lucide-react";
+import { Filter, Calendar, Tag, Newspaper, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "./ui/dropdown-menu";
 
 const CATEGORIES = [
   "technology",
@@ -26,7 +29,6 @@ const SOURCES = [
 export default function FilterDropdown() {
   const dispatch = useAppDispatch();
   const filters = useAppSelector((s) => s.articles.filters);
-  const [isOpen, setIsOpen] = useState(false);
   const [dateFrom, setDateFrom] = useState(filters.dateFrom ?? "");
   const [dateTo, setDateTo] = useState(filters.dateTo ?? "");
 
@@ -85,118 +87,109 @@ export default function FilterDropdown() {
     (filters.dateTo ? 1 : 0);
 
   return (
-    <div className="relative flex gap-1">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-4 py-2.5 bg-background border border-input rounded-xl hover:bg-accent transition-colors font-medium text-foreground shadow-sm text-sm"
-      >
-        <Filter className="w-4 h-4" />
-        <span>Filters</span>
-        {activeFilterCount > 0 && (
-          <span className="ml-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-[10px] font-semibold">
-            {activeFilterCount}
-          </span>
-        )}
-        <ChevronDown
-          className={`w-3.5 h-3.5 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </button>
+    <div className="relative flex gap-2 items-center">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="flex items-center gap-1.5 px-4 py-2.5 bg-background border border-input rounded-xl hover:bg-accent transition-colors font-medium text-foreground shadow-sm text-sm">
+            <Filter className="w-4 h-4" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="ml-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-[10px] font-semibold">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </DropdownMenuTrigger>
 
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsOpen(false)}
-          />
-          <div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-xl shadow-xl z-20 p-5 space-y-5 text-sm">
-            {/* Date Range */}
-            <div>
-              <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2.5">
-                <Calendar className="w-3.5 h-3.5" />
-                Date Range
-              </label>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-1.5">
-                    From
-                  </label>
-                  <input
-                    type="date"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
-                    onBlur={applyDateFilter}
-                    className="w-full px-2.5 py-2 bg-background border border-input rounded-lg text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-1.5">
-                    To
-                  </label>
-                  <input
-                    type="date"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
-                    onBlur={applyDateFilter}
-                    className="w-full px-2.5 py-2 bg-background border border-input rounded-lg text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  />
-                </div>
+        <DropdownMenuContent
+          sideOffset={6}
+          className="w-[min(90vw,20rem)] sm:w-80 p-4 space-y-4 bg-card border border-border rounded-lg shadow-lg"
+        >
+          {/* Date Range */}
+          <div>
+            <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2">
+              <Calendar className="w-4 h-4" />
+              Date Range
+            </label>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1">
+                  From
+                </label>
+                <input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  onBlur={applyDateFilter}
+                  className="w-full px-2.5 py-2 bg-background border border-input rounded-lg text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                />
               </div>
-            </div>
-
-            {/* Categories */}
-            <div>
-              <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2.5">
-                <Tag className="w-3.5 h-3.5" />
-                Categories
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => toggleCategory(category)}
-                    className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all capitalize ${
-                      filters.categories.includes(category)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sources */}
-            <div>
-              <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2.5">
-                <Newspaper className="w-3.5 h-3.5" />
-                Sources
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {SOURCES.map((source) => (
-                  <button
-                    key={source.id}
-                    onClick={() => toggleSource(source.id)}
-                    className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
-                      filters.sources.includes(source.id as any)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    }`}
-                  >
-                    {source.label}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1">
+                  To
+                </label>
+                <input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  onBlur={applyDateFilter}
+                  className="w-full px-2.5 py-2 bg-background border border-input rounded-lg text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                />
               </div>
             </div>
           </div>
-        </>
-      )}
 
-      {/* Active Filter Pills */}
+          {/* Categories */}
+          <div>
+            <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2">
+              <Tag className="w-4 h-4" />
+              Categories
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => toggleCategory(category)}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all capitalize ${
+                    filters.categories.includes(category)
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Sources */}
+          <div>
+            <label className="flex items-center gap-1.5 text-sm font-semibold text-foreground mb-2">
+              <Newspaper className="w-4 h-4" />
+              Sources
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {SOURCES.map((source) => (
+                <button
+                  key={source.id}
+                  onClick={() => toggleSource(source.id)}
+                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
+                    filters.sources.includes(source.id as any)
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  {source.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Active Filter Pills - shown on md+ */}
       {activeFilterCount > 0 && (
-        <div className=" gap-1 hidden md:flex">
+        <div className="hidden md:flex gap-2 items-center">
           {filters.dateFrom && (
             <div className="flex items-center gap-1 px-2.5 py-1.5 bg-primary/10 text-primary rounded-full text-[11px] font-medium">
               <span>From: {filters.dateFrom}</span>

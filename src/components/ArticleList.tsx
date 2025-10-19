@@ -1,5 +1,3 @@
-"use client"
-
 import ArticleCard from "./ArticleCard"
 import type { Article } from "../store/slices/articlesSlice"
 
