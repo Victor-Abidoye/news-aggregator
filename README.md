@@ -1,26 +1,3 @@
-## Inno News ( Casy Study Project ) - News Aggregator App using React, TypeScript, Tailwind CSS, Redux, Redux-toolkit, Public News API
-
-
-## Live Demo: [](https://news-aggeregator.vercel.app/)
-
-### Core P0 Features
-
-- ✅ [Home Page - News Feed]
-- ✅ [Filters - Data Source , Category, Date range]
-- ✅ [Scroll To Top]
-- ✅ [Infinte Scroll]
-- ✅ [Responsive Design (Both Desktop and Mobile Responsive)]
-
-
-### Inno News is a modern **News Aggregator App** built using:
-
-- **Frontend - React, Typescript, Tailwind CSS**
-- **Redux** (State Management)
-- **Public News APIs Sources** (NewsAPI, The Guardian, NYTimes)
-- **Development & Deployment:** Vite, Docker, Netlify
-
----
-
 ## 💻 Local Development Setup
 
 ### 1️⃣ Prerequisites
