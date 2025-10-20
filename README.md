@@ -25,7 +25,7 @@ pnpm install
 
 ### 4️⃣ Set Up Environment Variables
 
-Create a `.env.local` file in the root directory and add your API keys:
+Create a `.env` file in the root directory and add your API keys:
 
 ```sh
 VITE_NEWSAPI_KEY=your_news_api_key
