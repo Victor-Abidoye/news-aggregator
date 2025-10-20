@@ -13,7 +13,7 @@ import {
 const CATEGORIES = [
   "technology",
   "business",
-  "sports",
+  "sport",
   "entertainment",
   "health",
   "science",
@@ -30,10 +30,20 @@ const SOURCES: { id: ArticleSource; label: string }[] = [
 export default function FilterDropdown() {
   const dispatch = useAppDispatch();
   const filters = useAppSelector((s) => s.articles.filters);
+  const preferredCategories = useAppSelector(
+    (s) => s.preferences.preferredCategories || []
+  );
   const [dateFrom, setDateFrom] = useState(filters.dateFrom ?? "");
   const [dateTo, setDateTo] = useState(filters.dateTo ?? "");
 
   const toggleCategory = (category: string) => {
+    // Do not allow toggling categories that are set as persistent user
+    // preferences. Those should be managed on the Preferences page.
+    const isPref = preferredCategories.some(
+      (pc) => String(pc).toLowerCase() === String(category).toLowerCase()
+    );
+    if (isPref) return;
+
     const current = filters.categories;
     const updated = current.includes(category)
       ? current.filter((c) => c !== category)
@@ -83,7 +93,13 @@ export default function FilterDropdown() {
   };
 
   const activeFilterCount =
-    filters.categories.length +
+    // Exclude preference categories from the visible pill count
+    filters.categories.filter(
+      (c) =>
+        !preferredCategories.some(
+          (pc) => String(pc).toLowerCase() === String(c).toLowerCase()
+        )
+    ).length +
     filters.sources.length +
     (filters.dateFrom ? 1 : 0) +
     (filters.dateTo ? 1 : 0);
@@ -214,20 +230,27 @@ export default function FilterDropdown() {
               </button>
             </div>
           )}
-          {filters.categories.map((category) => (
-            <div
-              key={category}
-              className="flex items-center gap-1 px-2.5 py-1.5 bg-primary/10 text-primary rounded-full text-[11px] font-medium capitalize"
-            >
-              <span>{category}</span>
-              <button
-                onClick={() => removeFilter("category", category)}
-                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+          {filters.categories
+            .filter(
+              (c) =>
+                !preferredCategories.some(
+                  (pc) => String(pc).toLowerCase() === String(c).toLowerCase()
+                )
+            )
+            .map((category) => (
+              <div
+                key={category}
+                className="flex items-center gap-1 px-2.5 py-1.5 bg-primary/10 text-primary rounded-full text-[11px] font-medium capitalize"
               >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
+                <span>{category}</span>
+                <button
+                  onClick={() => removeFilter("category", category)}
+                  className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
           {filters.sources.map((source) => (
             <div
               key={source}

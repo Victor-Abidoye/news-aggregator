@@ -3,6 +3,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { useEffect, useMemo } from "react";
 import { fetchArticlesThunk } from "../store/thunks/fetchArticlesThunk";
+import { updateFilters } from "../store/slices/articlesSlice";
 import {
   selectAllArticles,
   selectPersonalizedArticles,
@@ -28,6 +29,36 @@ export default function HomePage() {
   const personalizedArticles = useAppSelector(selectPersonalizedArticles);
 
   useEffect(() => {
+    // Load persisted preferences (preferencesSlice stores to localStorage key 'preferences')
+    try {
+      const raw = localStorage.getItem("preferences");
+      if (raw) {
+        const parsed = JSON.parse(raw) as {
+          preferredSources?: string[];
+          preferredCategories?: string[];
+        };
+
+        const VALID_SOURCES = ["newsapi", "guardian", "nytimes"];
+
+        const parsedSources = (parsed.preferredSources || [])
+          .map((s) => String(s).toLowerCase())
+          .filter((s) => VALID_SOURCES.includes(s));
+
+        const parsedCategories = (parsed.preferredCategories || [])
+          .map((c) => String(c).trim())
+          .filter(Boolean);
+
+        if (parsedSources.length || parsedCategories.length) {
+          dispatch(
+            updateFilters({ sources: parsedSources as any, categories: parsedCategories })
+          );
+        }
+      }
+    } catch (e) {
+      // ignore parse errors and continue
+    }
+
+    // Fetch articles using current filters (which may have just been updated)
     dispatch(fetchArticlesThunk());
   }, [dispatch]);
 
