@@ -8,6 +8,8 @@ import {
 import { Settings, Save, User, Tag, Newspaper, ArrowLeft } from "lucide-react";
 import type { ArticleSource } from "../store/slices/articlesSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { updateFilters } from "../store/slices/articlesSlice";
+import { fetchArticlesThunk } from "../store/thunks/fetchArticlesThunk";
 
 export default function PreferencesPage() {
   const dispatch = useAppDispatch();
@@ -43,6 +45,13 @@ export default function PreferencesPage() {
     dispatch(setPreferredSources(parsedSources));
     dispatch(setPreferredCategories(parsedCategories));
     dispatch(setPreferredAuthors(parsedAuthors));
+
+    // Update filters so the articles list uses the new preferences and refetch
+    dispatch(
+      updateFilters({ sources: parsedSources, categories: parsedCategories })
+    );
+    dispatch(fetchArticlesThunk());
+
     navigate("/");
   };
 
