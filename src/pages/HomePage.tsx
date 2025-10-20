@@ -63,6 +63,8 @@ export default function HomePage() {
   }, [dispatch]);
 
   const latestNews = useMemo(
+    // I'm to use a datetime comparison here to get the latest 6 articles, but for --- IGNORE ---
+    // simplicity, I'll just shuffle and take first 6.
     () => shuffleArray(allArticles).slice(0, 6),
     [allArticles]
   );
