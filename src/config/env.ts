@@ -10,5 +10,3 @@ export const env = {
   GUARDIAN_KEY: getEnvVar("VITE_GUARDIAN_KEY"),
   NYT_KEY: getEnvVar("VITE_NYT_KEY"),
 };
-
-export function assertEnv(): void {}

@@ -23,23 +23,26 @@ export default function PreferencesPage() {
   const VALID_SOURCES = ["newsapi", "guardian", "nytimes"];
 
   const save = () => {
-    const s = sources
+    const parsedSources = sources
       .split(",")
       .map((x) => x.trim())
       .filter(Boolean)
       .map((x) => x.toLowerCase())
       .filter((x) => VALID_SOURCES.includes(x)) as ArticleSource[];
-    const c = categories
+
+    const parsedCategories = categories
       .split(",")
       .map((x) => x.trim())
       .filter(Boolean);
-    const a = authors
+
+    const parsedAuthors = authors
       .split(",")
       .map((x) => x.trim())
       .filter(Boolean);
-    dispatch(setPreferredSources(s));
-    dispatch(setPreferredCategories(c));
-    dispatch(setPreferredAuthors(a));
+
+    dispatch(setPreferredSources(parsedSources));
+    dispatch(setPreferredCategories(parsedCategories));
+    dispatch(setPreferredAuthors(parsedAuthors));
     navigate("/");
   };
 
